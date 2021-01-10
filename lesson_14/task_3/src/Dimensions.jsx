@@ -1,8 +1,29 @@
-import React from "react";
-import ReactDOM from "react-dom";
-import "./index.scss";
-import Dimensions from "./Dimensions.jsx";
+import React, { useState, useEffect } from "react";
 
-const rootElement = document.querySelector("#root");
+const Dimensions = () => {
+  const [dimensions, setDimensions] = useState({
+    width: null,
+    height: null,
+  });
 
-ReactDOM.render(<Dimensions />, rootElement);
+  useEffect(() => {
+    const { innerWidth, innerHeight } = window;
+    setDimensions({ width: innerWidth, height: innerHeight });
+    const handleResize = event => {
+      const { innerWidth, innerHeight } = event.target;
+      setDimensions({ width: innerWidth, height: innerHeight });
+    }
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    }
+  }, [])
+
+
+  const { width, height } = dimensions;
+  return <div className="dimensions">{`${width}px - ${height}px`}</div>;
+
+}
+
+export default Dimensions;
